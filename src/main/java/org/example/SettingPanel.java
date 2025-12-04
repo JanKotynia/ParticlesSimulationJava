@@ -6,6 +6,8 @@ import java.util.function.DoubleConsumer;
 
 public class SettingPanel extends JPanel {
     SettingPanel(MyPanel mainPanel) {
+        int minParticleVal =-10;
+        int maxParticleVal =10;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(new Color(0, 0, 35));
@@ -19,27 +21,31 @@ public class SettingPanel extends JPanel {
 
         this.add(Box.createVerticalStrut(10));
 
-        JButton startButton = new JButton("SIMULATION START");
-        startButton.setBackground(new Color(35, 35, 35));
-        startButton.setForeground(Color.CYAN);
-        startButton.setForeground(Color.WHITE);
-        startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        MyButton startButton = new MyButton("SIMULATION START");
+
+        MyButton randomSettingsButton = new MyButton("RANDOM SETTINGS");
 
         startButton.addActionListener(e -> mainPanel.setStart());
         this.add(startButton);
 
+        this.add(Box.createVerticalStrut(5));
 
-        addSlider(-10,10,"GREEN TO GREEN", val -> mainPanel.setColorCombinations(val, MyPanel.G_TO_G));
-        addSlider(-10,10,"GREEN TO RED", val -> mainPanel.setColorCombinations(val, MyPanel.G_TO_R));
-        addSlider(-10,10,"GREEN TO BLUE", val -> mainPanel.setColorCombinations(val, MyPanel.G_TO_B));
+        randomSettingsButton.addActionListener(e -> mainPanel.setRandomForce());
+        this.add(randomSettingsButton);
 
-        addSlider(-10,10,"RED TO GREEN", val -> mainPanel.setColorCombinations(val, MyPanel.R_TO_G));
-        addSlider(-10,10,"RED TO RED", val -> mainPanel.setColorCombinations(val, MyPanel.R_TO_R));
-        addSlider(-10,10,"RED TO BLUE", val -> mainPanel.setColorCombinations(val, MyPanel.R_TO_B));
 
-        addSlider(-10,10,"BLUE TO GREEN", val -> mainPanel.setColorCombinations(val, MyPanel.B_TO_G));
-        addSlider(-10,10,"BLUE TO RED", val -> mainPanel.setColorCombinations(val, MyPanel.B_TO_R));
-        addSlider(-10,10,"BLUE TO BLUE", val -> mainPanel.setColorCombinations(val, MyPanel.B_TO_B));
+        addSlider(minParticleVal,maxParticleVal,"GREEN TO GREEN", val -> mainPanel.setColorCombinations(val, MyPanel.G_TO_G));
+        addSlider(minParticleVal,maxParticleVal,"GREEN TO RED", val -> mainPanel.setColorCombinations(val, MyPanel.G_TO_R));
+        addSlider(minParticleVal,maxParticleVal,"GREEN TO BLUE", val -> mainPanel.setColorCombinations(val, MyPanel.G_TO_B));
+
+        addSlider(minParticleVal,maxParticleVal,"RED TO GREEN", val -> mainPanel.setColorCombinations(val, MyPanel.R_TO_G));
+        addSlider(minParticleVal,maxParticleVal,"RED TO RED", val -> mainPanel.setColorCombinations(val, MyPanel.R_TO_R));
+        addSlider(minParticleVal,maxParticleVal,"RED TO BLUE", val -> mainPanel.setColorCombinations(val, MyPanel.R_TO_B));
+
+        addSlider(minParticleVal,maxParticleVal,"BLUE TO GREEN", val -> mainPanel.setColorCombinations(val, MyPanel.B_TO_G));
+        addSlider(minParticleVal,maxParticleVal,"BLUE TO RED", val -> mainPanel.setColorCombinations(val, MyPanel.B_TO_R));
+        addSlider(minParticleVal,maxParticleVal,"BLUE TO BLUE", val -> mainPanel.setColorCombinations(val, MyPanel.B_TO_B));
     }
 
     private void addSlider(int min, int max, String name, DoubleConsumer onValueChange){

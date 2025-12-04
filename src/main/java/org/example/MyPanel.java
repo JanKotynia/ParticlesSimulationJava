@@ -16,6 +16,10 @@ public class MyPanel extends JPanel implements ActionListener {
     private final ArrayList<Particle> particles = new ArrayList<>();
     private boolean start = false;
 
+    private int greenAmount = 1000;
+    private int redAmount = 1000;
+    private int blueAmount = 1000;
+
     private double[] colorCombinations= new double[9];
     //I assign every color combination to a specific index number
     //GtoG 0 GtoR 1 GtoB 2 RtoG 3 RtoR 4 RtoB 5 BtoG 6 BtoR 7 BtoB 8
@@ -37,15 +41,15 @@ public class MyPanel extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(PANEL_W,PANEL_H));
         this.setBackground(new Color(0,0,35));
 
-        timer = new Timer(50,this);
+        timer = new Timer(24,this);
         timer.start();
     }
 
     public void setStart(){
     if (!start){
-    drawMany(100, Color.RED);
-    drawMany(100, Color.GREEN);
-    drawMany(100, Color.BLUE);
+    drawMany(redAmount, Color.RED);
+    drawMany(greenAmount, Color.GREEN);
+    drawMany(blueAmount, Color.BLUE);
     }
     else {
         particles.clear();
@@ -64,8 +68,8 @@ public class MyPanel extends JPanel implements ActionListener {
     public void drawMany(int number, Color color){
         Random rand = new Random();
         for (int i = 0; i < number; i++) {
-            int x = rand.nextInt(900);
-            int y = rand.nextInt(700);
+            int x = rand.nextInt(PANEL_W);
+            int y = rand.nextInt(PANEL_H);
             particles.add(new Particle(x,y,color));
         }
     }
@@ -104,30 +108,64 @@ public class MyPanel extends JPanel implements ActionListener {
             double fx = 0;
             double fy = 0;
             for (Particle particle2 : p2) {
-                int dx = particle.getX() - particle2.getX();
-                int dy = particle.getY() - particle2.getY();
-                double d = Math.sqrt(dx + dx + dy * dy);
-                if (d > 0 && d < 100) {
-                    double F = amonut * 1 / d;
+                double dx = particle.getX() - particle2.getX();
+                double dy = particle.getY() - particle2.getY();
+                double d = Math.sqrt(dx*dx + dy*dy);
+                if (d > particle.getRadius() && d < 80) {
+                    double square = d*d;
+                    if (square < 0) square = 1;
+                    double F = amonut / square;
                     fx += (F * dx);
                     fy += (F * dy);
+
                 }
             }
-            particle.setVX((particle.getVX() + fx) * 0.8);
-            particle.setVY((particle.getVY() + fy) * 0.8);
+            particle.setVX((particle.getVX() + fx) * 0.9);
+            particle.setVY((particle.getVY() + fy) * 0.9);
+        }
+
+        for (Particle particle : particles){
             particle.move();
-            particle.move();
-
-            if (particle.getX() >= PANEL_W || particle.getX() <= 0) {particle.setVX(particle.getVX() * -1);}
-            if (particle.getY() >= PANEL_H || particle.getY() <= 0) {particle.setVY(particle.getVY() * -1);}
-
-
-
+            boundsCheck(particle);
         }
     }
 
 
+    public void boundsCheck(Particle particle){
+        if (particle.getX() >= PANEL_W - particle.getRadius()) {
+            particle.setX(PANEL_W - particle.getRadius());
+            particle.setVX(particle.getVX() * -1);
+        }
+        if (particle.getX() <= 0) {
+            particle.setX(particle.getRadius());
+            particle.setVX(particle.getVX() * -1);
+        }
+
+        if (particle.getY() >= PANEL_H - particle.getRadius()) {
+            particle.setY(PANEL_H - particle.getRadius());
+            particle.setVY(particle.getVY() * -1);
+        }
+        if (particle.getY() <= 0) {
+            particle.setY(particle.getRadius());
+            particle.setVY(particle.getVY() * -1);
+        }
+    }
+
     public void setColorCombinations(double v, int index) {
         colorCombinations[index] = v;
+    }
+
+    public void setParticlesAmount(int val, char color){
+        if (color == 'r') redAmount = val;
+        else if (color == 'g') greenAmount = val;
+        else blueAmount = val;
+    }
+
+    public void setRandomForce() {
+        Random generator = new Random();
+        for (int i = 0 ; i < colorCombinations.length;i++) {
+            double randomVal = 2.0 * generator.nextDouble() - 1.0;
+            colorCombinations[i] = randomVal;
+        }
     }
 }
