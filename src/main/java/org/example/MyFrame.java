@@ -9,8 +9,10 @@ public class MyFrame extends JFrame {
         this.setIconImage(imageIcon.getImage());
         this.setTitle("Simulation");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(true);
-        this.setSize(1920,1080);
+        this.setResizable(false);
+        this.setExtendedState(MyFrame.MAXIMIZED_BOTH);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize(screenSize.width, screenSize.height);
         this.getContentPane().setBackground(new Color(0,0,35));
         this.setVisible(true);
     }

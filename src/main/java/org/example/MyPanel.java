@@ -15,12 +15,14 @@ public class MyPanel extends JPanel implements ActionListener {
     Timer timer;
     private final ArrayList<Particle> particles = new ArrayList<>();
     private boolean start = false;
+    private Runnable onUpdateUI;
+    private final Random generator = new Random();
 
     private int greenAmount = 1000;
     private int redAmount = 1000;
     private int blueAmount = 1000;
 
-    private double[] colorCombinations= new double[9];
+    private final double[] colorCombinations= new double[9];
     //I assign every color combination to a specific index number
     //GtoG 0 GtoR 1 GtoB 2 RtoG 3 RtoR 4 RtoB 5 BtoG 6 BtoR 7 BtoB 8
 
@@ -50,6 +52,7 @@ public class MyPanel extends JPanel implements ActionListener {
     drawMany(redAmount, Color.RED);
     drawMany(greenAmount, Color.GREEN);
     drawMany(blueAmount, Color.BLUE);
+        System.out.println("G: " + greenAmount + "R: " + redAmount + "B: " + blueAmount);
     }
     else {
         particles.clear();
@@ -87,17 +90,17 @@ public class MyPanel extends JPanel implements ActionListener {
             ArrayList<Particle> r = groupedParticles.getOrDefault(Color.RED, new ArrayList<>());
 
 
-            force(g,g,colorCombinations[G_TO_G]/10);
-            force(g,r,colorCombinations[G_TO_R]/10);
-            force(g,b,colorCombinations[G_TO_B]/10);
+            force(g,g,colorCombinations[G_TO_G]);
+            force(g,r,colorCombinations[G_TO_R]);
+            force(g,b,colorCombinations[G_TO_B]);
 
-            force(r,g,colorCombinations[R_TO_G]/10);
-            force(r,r,colorCombinations[R_TO_R]/10);
-            force(r,b,colorCombinations[R_TO_B]/10);
+            force(r,g,colorCombinations[R_TO_G]);
+            force(r,r,colorCombinations[R_TO_R]);
+            force(r,b,colorCombinations[R_TO_B]);
 
-            force(b,g,colorCombinations[B_TO_G]/10);
-            force(b,r,colorCombinations[B_TO_R]/10);
-            force(b,b,colorCombinations[B_TO_B]/10);
+            force(b,g,colorCombinations[B_TO_G]);
+            force(b,r,colorCombinations[B_TO_R]);
+            force(b,b,colorCombinations[B_TO_B]);
 
             repaint();
         }
@@ -111,7 +114,7 @@ public class MyPanel extends JPanel implements ActionListener {
                 double dx = particle.getX() - particle2.getX();
                 double dy = particle.getY() - particle2.getY();
                 double d = Math.sqrt(dx*dx + dy*dy);
-                if (d > particle.getRadius() && d < 80) {
+                if (d > particle.getRadius() && d < 50) {
                     double square = d*d;
                     if (square < 0) square = 1;
                     double F = amonut / square;
@@ -155,17 +158,45 @@ public class MyPanel extends JPanel implements ActionListener {
         colorCombinations[index] = v;
     }
 
-    public void setParticlesAmount(int val, char color){
-        if (color == 'r') redAmount = val;
-        else if (color == 'g') greenAmount = val;
-        else blueAmount = val;
-    }
-
     public void setRandomForce() {
-        Random generator = new Random();
         for (int i = 0 ; i < colorCombinations.length;i++) {
             double randomVal = 2.0 * generator.nextDouble() - 1.0;
             colorCombinations[i] = randomVal;
         }
+        if (onUpdateUI != null) {
+            onUpdateUI.run();
+        }
+    }
+
+    public void setGreenAmount(int greenAmount) {
+        this.greenAmount = greenAmount;
+    }
+
+    public void setRedAmount(int redAmount) {
+        this.redAmount = redAmount;
+    }
+
+    public void setBlueAmount(int blueAmount) {
+        this.blueAmount = blueAmount;
+    }
+
+    public int getGreenAmount() {
+        return greenAmount;
+    }
+
+    public int getRedAmount() {
+        return redAmount;
+    }
+
+    public int getBlueAmount() {
+        return blueAmount;
+    }
+
+    public double[] getColorCombinations() {
+        return colorCombinations;
+    }
+
+    public void setOnUpdateUICallback(Runnable onUpdateUI) {
+        this.onUpdateUI = onUpdateUI;
     }
 }

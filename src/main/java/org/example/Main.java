@@ -3,7 +3,7 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 
-
+//connecting everything in main
 public class Main {
     public static void main(String[] args) {
 
@@ -25,6 +25,8 @@ public class Main {
 
             myFrame.setSize(1920,1080);
             myFrame.setVisible(true);
+
+            mainPanel.setOnUpdateUICallback(settingsPanel::refreshSliders);
         });
     }
 }

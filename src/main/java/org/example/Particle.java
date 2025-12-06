@@ -17,9 +17,6 @@ class Particle {
     public void move() {
         x += vx;
         y += vy;
-
-//        if(vx != 0 && vy!=0)
-//            System.out.println("VX: " + vx + " VY: " + vy);
     }
 
     public void draw(Graphics g) {
@@ -27,7 +24,6 @@ class Particle {
         g.fillOval((int) (x - radius), (int) (y - radius), radius * 2, radius * 2);
     }
 
-    // Dodatkowe metody do obsługi odbijania od brzegów (gettery/settery)
     public double getX() { return x; }
     public double getY() { return y; }
     public void setVX(double vx) { this.vx = vx; }
